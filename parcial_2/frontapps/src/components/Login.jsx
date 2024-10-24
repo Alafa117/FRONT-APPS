@@ -1,61 +1,41 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './styles/Login.css';
 
-function ChangePasswords() {
-    const [username, setUsername] = useState("");  // Inicializado como string vacía
-    const [password, setPassword] = useState("");  // Inicializado como string vacía
-    const [role, setRole] = useState("user");      // Nuevo estado para seleccionar entre "admin" o "user"
+function Login() {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        username: '',
+        password: ''
+    });
 
-    const goTo = useNavigate();
-
-    const crearuser = (event) => {
-        event.preventDefault();
-
-        // Asegurarse de que los campos no estén vacíos
-        if (!username || !password) {
-            alert("Por favor, complete todos los campos.");
-            return;
-        }
-
-        fetch(`http://localhost:4000/v1/signos/crear`, {
-            method: 'POST',
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password, role })  // Enviar también el rol (admin o user)
-        })
-            .then(res => res.json())
-            .then(responseData => {
-                if (responseData.resultado === 'Usuario creado correctamente') {
-                    alert("Usuario creado correctamente");
-                    goTo("/Form");  // Redirigir a la página de inicio de sesión
-                } else if (responseData.resultado === 'Error al crear usuario') {
-                    alert("Error al crear usuario");
-                }
-            })
-            .catch(error => {
-                console.error("Error en la creación de usuario:", error);
-                alert("Hubo un error en la solicitud. Inténtalo de nuevo.");
-            });
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // Aquí irá la lógica de autenticación
+        // Si es exitoso, redirigir a /codes
+    };
 
     return (
-        <form onSubmit={crearuser}>
-            <h1 id="txtBienvenida">Crear usuarios</h1>
-            <h4 className="txt">Nombre de Usuario</h4>  
-            <input type="text" className="entry" value={username} onChange={(e) => setUsername(e.target.value)} /><br />
-
-            <h4 className="txt">Crear contraseña</h4>  
-            <input type="password" className="entry" value={password} onChange={(e) => setPassword(e.target.value)} /><br />
-
-            <h4 className="txt">Tipo de usuario</h4>
-            <select className="entry" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select><br />
-
-            <input type="submit" value="Crear" id="btnEnviar" />
-        </form> 
+        <div className="login-container">
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="Usuario"
+                    value={formData.username}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                />
+                <input
+                    type="password"
+                    placeholder="Contraseña"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                />
+                <div className="buttons-container">
+                    <button type="button" onClick={() => navigate('/')}>Volver al Inicio</button>
+                    <button type="submit">Iniciar Sesión</button>
+                </div>
+                <button type="button" onClick={() => navigate('/signup')}>Ir a Sign Up</button>
+            </form>
+        </div>
     );
 }
-
-export default ChangePasswords;
-
