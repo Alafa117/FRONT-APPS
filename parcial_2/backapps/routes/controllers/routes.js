@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const signoController = require('./controllers/signoController.js');
+const signoController = require('./userController.js');
 router
     .get('/', signoController.getAllSignos)
     .get('/:signo', signoController.getOneSigno)
