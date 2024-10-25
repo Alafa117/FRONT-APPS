@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios'; // Importa el cliente axios configurado
 
 function Login() {
     const navigate = useNavigate();
@@ -10,11 +11,12 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí irá la lógica de autenticación con el backend
         try {
-            // Simular llamada al backend
-            console.log('Login data:', formData);
-            navigate('/codes');
+            const response = await api.post('/auth/login', formData);
+            if (response.data.token) {
+                setAuthToken(response.data.token); // Guarda el token en localStorage
+                navigate('/codes');
+            }
         } catch (error) {
             console.error('Error en login:', error);
         }

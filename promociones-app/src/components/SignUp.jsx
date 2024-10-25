@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../api/axios'; // Importa el cliente axios configurado
 
 function SignUp() {
     const navigate = useNavigate();
@@ -14,11 +15,11 @@ function SignUp() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí irá la lógica de registro con el backend
         try {
-            // Simular llamada al backend
-            console.log('Signup data:', formData);
-            navigate('/login');
+            const response = await api.post('/auth/signup', formData);
+            if (response.data.token) {
+                navigate('/login'); // Redirige al login al finalizar el registro
+            }
         } catch (error) {
             console.error('Error en registro:', error);
         }

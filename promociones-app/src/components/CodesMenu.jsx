@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import api from '../api/axios'; // Importa el cliente axios configurado
 
 function CodesMenu() {
     const [code, setCode] = useState('');
@@ -7,17 +8,19 @@ function CodesMenu() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Aquí irá la lógica de verificación de códigos con el backend
         try {
-            // Simular llamada al backend
-            const isWinner = Math.random() > 0.5;
+            const response = await api.post('/codes/verify', { codigo: code });
             setResult({
-                success: isWinner,
-                message: isWinner ? "¡Felicitaciones! Has ganado un premio" : "Código no válido. Intenta nuevamente"
+                success: response.data.success,
+                message: response.data.message,
             });
             setCode('');
         } catch (error) {
             console.error('Error al verificar código:', error);
+            setResult({
+                success: false,
+                message: "Error al verificar el código. Intenta nuevamente."
+            });
         }
     };
 
